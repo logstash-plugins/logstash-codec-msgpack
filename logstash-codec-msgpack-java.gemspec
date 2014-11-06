@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name            = 'logstash-codec-msgpack'
-  s.version         = '0.1.0'
+  s.version         = '0.1.1'
   s.licenses        = ['Apache License (2.0)']
   s.summary         = "Encode and decode msgpack formatted data"
   s.description     = "Encode and decode msgpack formatted data"
