@@ -6,7 +6,6 @@ require "logstash/util"
 class LogStash::Codecs::Msgpack < LogStash::Codecs::Base
   config_name "msgpack"
 
-  milestone 1
 
   config :format, :validate => :string, :default => nil
 
