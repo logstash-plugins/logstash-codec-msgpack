@@ -1,11 +1,22 @@
 # encoding: utf-8
 require "logstash/codecs/base"
 
+# The "msgpack_feed" codec is for decoding msgpack feeds (streams) which
+# have no delimiter between events.
+#
+# This is useful for decoding msgpack feeds over tcp inputs, pipes or
+# other stream-based protocols.
+#
+# Unfortunately, the default msgpack codec will only work to decode
+# complete msgpack objects.
 class LogStash::Codecs::MsgpackFeed < LogStash::Codecs::Base
   config_name "msgpack_feed"
 
-  milestone 1
 
+  # Set the message you which to emit for each event. This supports `sprintf`
+  # strings.
+  #
+  # This setting only affects inputs (decoding of events).
   config :format, :validate => :string, :default => nil
 
   def initialize(params={})
