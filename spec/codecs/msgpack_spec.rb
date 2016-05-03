@@ -14,10 +14,10 @@ describe LogStash::Codecs::Msgpack do
       data = {"foo" => "bar", "baz" => {"bah" => ["a","b","c"]}, "@timestamp" => "2014-05-30T02:52:17.929Z"}
       subject.decode(MessagePack.pack(data)) do |event|
         insist { event.is_a? LogStash::Event }
-        insist { event["foo"] } == data["foo"]
-        insist { event["baz"] } == data["baz"]
-        insist { event["bah"] } == data["bah"]
-        insist { event["@timestamp"].to_iso8601 } == data["@timestamp"]
+        insist { event.get("foo") } == data["foo"]
+        insist { event.get("baz") } == data["baz"]
+        insist { event.get("bah") } == data["bah"]
+        insist { event.get("@timestamp").to_iso8601 } == data["@timestamp"]
       end
     end
   end
@@ -32,7 +32,7 @@ describe LogStash::Codecs::Msgpack do
         insist { MessagePack.unpack(d)["baz"] } == data["baz"]
         insist { MessagePack.unpack(d)["bah"] } == data["bah"]
         insist { MessagePack.unpack(d)["@timestamp"] } == "2014-05-30T02:52:17.929Z"
-        insist { MessagePack.unpack(d)["@timestamp"] } == event["@timestamp"].to_iso8601
+        insist { MessagePack.unpack(d)["@timestamp"] } == event.get("@timestamp").to_iso8601
         got_event = true
       end
       subject.encode(event)
@@ -48,7 +48,7 @@ describe LogStash::Codecs::Msgpack do
         insist { MessagePack.unpack(d)["baz"] } == data["baz"]
         insist { MessagePack.unpack(d)["bah"] } == data["bah"]
         insist { MessagePack.unpack(d)["@timestamp"] } == "2014-05-30T02:52:17.929Z"
-        insist { MessagePack.unpack(d)["@timestamp"] } == event["@timestamp"].to_iso8601
+        insist { MessagePack.unpack(d)["@timestamp"] } == event.get("@timestamp").to_iso8601
         got_event = true
       end
       subject.encode(event)

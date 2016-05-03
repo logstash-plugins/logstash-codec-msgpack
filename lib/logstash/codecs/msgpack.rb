@@ -19,17 +19,25 @@ class LogStash::Codecs::Msgpack < LogStash::Codecs::Base
     begin
       # Msgpack does not care about UTF-8
       event = LogStash::Event.new(MessagePack.unpack(data))
-      event["tags"] ||= []
+      
+      if event.get("tags").nil?
+        event.set("tags", [])
+      end
+      
       if @format
-        event["message"] ||= event.sprintf(@format)
+        if event.get("message").nil?
+          event.set("message", event.sprintf(@format))
+        end  
       end
     rescue => e
       # Treat as plain text and try to do the best we can with it?
       @logger.warn("Trouble parsing msgpack input, falling back to plain text",
                    :input => data, :exception => e)
-      event["message"] = data
-      event["tags"] ||= []
-      event["tags"] << "_msgpackparsefailure"
+      event.set("message", data)
+      
+      tags = event.get("tags").nil? ? [] : event.get("tags") 
+      tags << "_msgpackparsefailure"
+      event.set("tags", tags)
     end
     yield event
   end # def decode
