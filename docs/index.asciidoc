@@ -18,6 +18,10 @@ END - GENERATED VARIABLES, DO NOT EDIT!
 
 include::{include_path}/plugin_header.asciidoc[]
 
+==== Description
+
+This codec reads MessagePack encoded content.
+
 [id="plugins-{type}s-{plugin}-options"]
 ==== Msgpack Codec Configuration Options
 
