@@ -1,3 +1,6 @@
+## 3.0.5
+  - Fix some documentation issues
+
 ## 3.0.4
   - Docs: Add plugin description  
 ## 3.0.3
