@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.email           = 'info@elastic.co'
   s.homepage        = "http://www.elastic.co/guide/en/logstash/current/index.html"
   s.require_paths   = ["lib"]
+  s.platform        = "java"
 
   # Files
   s.files = Dir["lib/**/*","spec/**/*","*.gemspec","*.md","CONTRIBUTORS","Gemfile","LICENSE","NOTICE.TXT", "vendor/jar-dependencies/**/*.jar", "vendor/jar-dependencies/**/*.rb", "VERSION", "docs/**/*"]
@@ -22,12 +23,7 @@ Gem::Specification.new do |s|
   # Gem dependencies
   s.add_runtime_dependency "logstash-core-plugin-api", ">= 1.60", "<= 2.99"
 
-  if RUBY_PLATFORM == "java"
-    s.platform = RUBY_PLATFORM
-    s.add_runtime_dependency "msgpack-jruby"  #(Apache 2.0 license)
-  else
-    s.add_runtime_dependency "msgpack"        #(Apache 2.0 license)
-  end
+  s.add_runtime_dependency 'msgpack', '~> 1.1'
   s.add_development_dependency 'logstash-devutils'
 end
 
