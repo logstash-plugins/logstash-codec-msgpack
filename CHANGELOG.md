@@ -1,3 +1,6 @@
+## 3.0.7
+  - Update gemspec summary
+
 ## 3.0.6
   - Constrain msgpack dependency to ~> 1.1 due to old versions not containing some format and type definitions
 
