@@ -25,5 +25,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'msgpack', '~> 1.1'
   s.add_development_dependency 'logstash-devutils'
+  s.add_development_dependency 'insist'
 end
 
