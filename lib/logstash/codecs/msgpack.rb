@@ -3,11 +3,24 @@ require "logstash/codecs/base"
 require "logstash/timestamp"
 require "logstash/util"
 
+require 'logstash/plugin_mixins/event_support/event_factory_adapter'
+require 'logstash/plugin_mixins/validator_support/field_reference_validation_adapter'
+
 class LogStash::Codecs::Msgpack < LogStash::Codecs::Base
+
+  extend LogStash::PluginMixins::ValidatorSupport::FieldReferenceValidationAdapter
+
+  include LogStash::PluginMixins::EventSupport::EventFactoryAdapter
+
   config_name "msgpack"
 
-
   config :format, :validate => :string, :default => nil
+
+  # Defines a target field for placing decoded fields.
+  # If this setting is omitted, data gets stored at the root (top level) of the event.
+  #
+  # NOTE: the target is only relevant while decoding data into a new event.
+  config :target, :validate => :field_reference
 
   public
   def register
@@ -18,26 +31,15 @@ class LogStash::Codecs::Msgpack < LogStash::Codecs::Base
   def decode(data)
     begin
       # Msgpack does not care about UTF-8
-      event = LogStash::Event.new(MessagePack.unpack(data))
+      event = targeted_event_factory.new_event(MessagePack.unpack(data))
       
-      if event.get("tags").nil?
-        event.set("tags", [])
-      end
-      
-      if @format
-        if event.get("message").nil?
-          event.set("message", event.sprintf(@format))
-        end  
+      if @format && event.get("message").nil?
+        event.set("message", event.sprintf(@format))
       end
     rescue => e
       # Treat as plain text and try to do the best we can with it?
-      @logger.warn("Trouble parsing msgpack input, falling back to plain text",
-                   :input => data, :exception => e)
-      event.set("message", data)
-      
-      tags = event.get("tags").nil? ? [] : event.get("tags") 
-      tags << "_msgpackparsefailure"
-      event.set("tags", tags)
+      @logger.warn("Trouble parsing msgpack input, falling back to plain text", input: data, exception: e.class, message: e.message)
+      event = event_factory.new_event('message' => data, 'tags' => ["_msgpackparsefailure"])
     end
     yield event
   end # def decode
