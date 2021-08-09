@@ -1,5 +1,6 @@
 ## 3.1.0
   - Feat: added target configuration + event-factory support [#13](https://github.com/logstash-plugins/logstash-codec-msgpack/pull/13)
+  - Fix: decoding to create a fallback event when msg-pack unpacking fails
 
 ## 3.0.7
   - Update gemspec summary
